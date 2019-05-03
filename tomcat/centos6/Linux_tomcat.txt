@@ -1,0 +1,486 @@
+Tomcat软件 
+
+	网站服务器		httpd, Nginx 
+
+	编写动态页面的语言：
+		PHP				
+			LAMP
+			LNMP(LEMP)
+		Java(JSP) 
+			Tomcat(Apache)
+				轻量级工具
+				开源工具
+				网站服务器
+			WebLogical
+			WebSphere    -----> 重量级商业工具
+			resin
+		Python
+
+	作用： 
+		解析Java语言开发的web应用程序或者动态页面 
+
+	
+	Tomcat
+		支持多实例(instance)的配置 
+
+
+Tomcat软件：
+	
+	http://tomcat.apache.org/
+	用于解析Java语言应用程序
+	Java语言编写(JDK)
+
+类型：
+	源码软件(Java)
+	二进制软件(免编译)
+
+
+
+安装Tomcat
+
+1、安装JDK
+
+卸载系统自带的JDK
+
+[root@localhost ~]# rpm -qa | grep gcj
+libgcj-4.4.7-11.el6.x86_64
+[root@localhost ~]# 
+[root@localhost ~]# rpm -qa | grep jdk
+java-1.6.0-openjdk-1.6.0.0-11.1.13.4.el6.x86_64
+java-1.7.0-openjdk-1.7.0.65-2.5.1.2.el6_5.x86_64
+[root@localhost ~]# 
+[root@localhost ~]# rpm -e --nodeps libgcj java-1.6.0-openjdk java-1.7.0-openjdk
+
+
+[root@localhost tomcat]# rpm -ivh jdk-7u67-linux-x64.rpm
+ 
+[root@localhost tomcat]# vim /etc/profile
+export JAVA_HOME=/usr/java/jdk1.7.0_67
+export PATH=$PATH:$JAVA_HOME/bin
+
+[root@localhost tomcat]# source /etc/profile
+[root@localhost tomcat]# env | grep JAVA
+JAVA_HOME=/usr/java/jdk1.7.0_67
+
+[root@localhost tomcat]# java -version
+java version "1.7.0_67"
+Java(TM) SE Runtime Environment (build 1.7.0_67-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 24.65-b04, mixed mode)
+[root@localhost tomcat]# 
+
+2、安装Tomcat
+
+[root@tomcat ~]# tar zxf apache-tomcat-7.0.72.tar.gz -C /usr/local/
+[root@tomcat ~]# ln -s /usr/local/apache-tomcat-7.0.72/ /usr/local/tomcat
+
+[root@localhost tomcat]# vim /etc/profile
+export CATALINA_HOME=/usr/local/tomcat
+
+[root@localhost tomcat]# source /etc/profile
+[root@localhost tomcat]# env | grep HOME
+CATALINA_HOME=/usr/local/tomcat
+JAVA_HOME=/usr/java/jdk1.7.0_67
+HOME=/root
+
+
+Tomcat目录结构：
+
+	/usr/local/tomcat/bin			命令(startup.sh, shutdown.sh, catalina.sh)
+	/usr/local/tomcat/conf			配置文件(server.xml)
+	/usr/local/tomcat/logs			日志文件 
+	/usr/local/tomcat/webapps		存放Java应用程序的默认目录 
+
+
+3、启动tomcat
+
+方法1：
+
+[root@localhost ~]# /usr/local/tomcat/bin/startup.sh 
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/temp
+Using JRE_HOME:        /usr/java/jdk1.7.0_67
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+Tomcat started.
+
+[root@localhost ~]# netstat -antp | grep java
+tcp        0      0 ::ffff:127.0.0.1:8005       :::*                        LISTEN      3118/java           
+tcp        0      0 :::8009                     :::*                        LISTEN      3118/java           
+tcp        0      0 :::8080                     :::*                        LISTEN      3118/java           
+[root@localhost ~]# 
+
+测试
+http://192.168.87.101:8080/
+
+方法2：
+
+编写tomcat启动脚本 
+
+[root@localhost ~]# vim /etc/init.d/tomcat
+
+#!/bin/bash
+#
+# chkconfig: 2345 96 14
+
+export JAVA_HOME=/usr/java/jdk1.7.0_67
+export CATALINA_HOME=/usr/local/tomcat
+exec $CATALINA_HOME/bin/catalina.sh $*
+
+
+[root@localhost ~]# chmod a+x /etc/init.d/tomcat
+[root@localhost ~]# chkconfig --add tomcat
+[root@localhost ~]# chkconfig --list tomcat
+tomcat         	0:关闭	1:关闭	2:启用	3:启用	4:启用	5:启用	6:关闭
+
+
+应用程序部署目录：
+
+	/usr/local/tomcat/webapps/		基本目录docBase 
+
+		Car ----->  (*.jsp)	
+
+		ROOT 
+					
+	
+	每个应用程序目录下都有一个名称为WEB-INF目录，存放的是应用程序私有属性信息
+
+
+
+
+
+部署ejforum论坛(Java) 
+
+1、安装mysql数据库，并建立ejforum需要的数据库，及授权用户 
+
+[root@localhost ~]# yum install -y mysql-server 
+[root@localhost ~]# service mysqld start
+[root@localhost ~]# chkconfig mysqld on
+[root@localhost ~]# chkconfig --list mysqld
+mysqld         	0:关闭	1:关闭	2:启用	3:启用	4:启用	5:启用	6:关闭
+
+[root@localhost ~]# mysql -u root -p
+
+mysql> CREATE DATABASE ejform;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> GRANT all ON ejform.* TO 'martin'@'localhost' IDENTIFIED BY 'redhat';
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> FLUSH PRIVILEGES;
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+2、安装MySQL连接器
+
+[root@localhost tomcat]# tar zxf mysql-connector-java-5.1.6.tar.gz 
+[root@localhost tomcat]# cd mysql-connector-java-5.1.6
+[root@localhost mysql-connector-java-5.1.6]# ls
+build.xml  CHANGES  COPYING  docs  EXCEPTIONS-CONNECTOR-J  mysql-connector-java-5.1.6-bin.jar  README  README.txt  src
+[root@localhost mysql-connector-java-5.1.6]# cp mysql-connector-java-5.1.6-bin.jar  /usr/local/tomcat/lib/
+[root@localhost mysql-connector-java-5.1.6]# 
+
+
+
+3、解压缩ejforum软件，并拷贝文件到网站目录 
+
+[root@localhost tomcat]# rm -rf /usr/local/tomcat/webapps/ROOT/*
+[root@localhost tomcat]# unzip ejforum-2.3.zip 
+[root@localhost tomcat]# cd ejforum-2.3
+[root@localhost ejforum-2.3]# cd ejforum/
+[root@localhost ejforum]# cp -r * /usr/local/tomcat/webapps/ROOT/
+
+4、编辑WEB-INF文件，指定连接MySQL数据库用户名
+
+[root@localhost ~]# vim /usr/local/tomcat/webapps/ROOT/WEB-INF/conf/config.xml 
+
+<database maxActive="10" maxIdle="10" minIdle="2" maxWait="10000" 
+  username="martin" password="redhat" 
+  driverClassName="com.mysql.jdbc.Driver" 
+url="jdbc:mysql://localhost:3306/ejform?characterEncoding=gbk&amp;autoReconnect=true&amp;autoReconnectForPools=true&amp;zeroDateTimeBehavior=convertToNull"
+  sqlAdapter="sql.MysqlAdapter"/>
+
+  
+5、重启tomcat，测试访问
+
+# service tomcat stop
+# service tomcat start 
+
+  
+  
+
+Tomcat核心配置文件: /usr/local/tomcat/conf/server.xml
+
+<Server>					-----------> Tomcat实例 
+  <Service>					-----------> 定义网站服务
+	<Connector />			-----------> 定义对外提供服务的端口
+	<Engine>				-----------> Tomcat虚拟主机运行的环境
+		<Host>				-----------> Tomcat虚拟主机
+			<Context  />	-----------> 某应用程序的数据文件存放目录 
+		</Host>
+	</Engine>
+  </Service>
+</Server>
+  
+
+
+Tomcat虚拟主机
+
+配置虚拟主机：
+
+	www.a.org 			应用程序目录：/var/www  							网页目录：/var/www/blog 				
+	www.b.org 			应用程序目录：/usr/local/tomcat/webapps				网页目录：/usr/local/tomcat/webapps/bbs 
+	www.c.org 			应用程序目录：/webdata								网页目录：/webdata/ROOT 
+	
+	
+<Host name="www.a.org"  appBase="/var/www"
+    unpackWARs="true" autoDeploy="true">
+    <Context path="" docBase="blog" />
+    <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+        prefix="www.a.org_access_log." suffix=".txt"
+        pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+</Host>
+
+
+<Host name="www.b.org"  appBase="/usr/local/tomcat/webapps"
+    unpackWARs="true" autoDeploy="true">
+    <Context path="" docBase="bbs" />
+    <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+        prefix="www.b.org_access_log." suffix=".txt"
+        pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+</Host>
+
+
+<Host name="www.c.org"  appBase="/webdata"
+    unpackWARs="true" autoDeploy="true">
+    <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+        prefix="www.c.org_access_log." suffix=".txt"
+        pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+</Host>
+
+
+配置Tomcat使用默认的80端口提供服务 
+
+<Connector port="80" protocol="HTTP/1.1"
+  connectionTimeout="20000"
+  redirectPort="8443" />
+
+设置默认的虚拟主机 
+
+<Engine name="Catalina" defaultHost="www.a.org">
+
+
+
+Tomcat多实例部署 
+
+作用：
+	1、多个实例运行相同的应用，实现负载均衡
+	2、多个实例运行不同的应用 
+	
+配置过程：
+
+配置两个Tomcat实例，分别运行/webapps/ROOT下的网站 
+
+	实例1：
+		目录：/usr/local/tomcat/multi-instance/instace1		8081   8091 
+		
+	实例2：
+		目录：/usr/local/tomcat/multi-instance/instace2		8082   8092 
+
+
+
+1、安装Tomcat
+
+1）安装JDK
+
+[root@localhost tomcat]# rpm -ivh jdk-7u67-linux-x64.rpm
+ 
+[root@localhost tomcat]# vim /etc/profile
+export JAVA_HOME=/usr/java/jdk1.7.0_67
+export PATH=$PATH:$JAVA_HOME/bin
+
+[root@localhost tomcat]# source /etc/profile
+[root@localhost tomcat]# env | grep JAVA
+JAVA_HOME=/usr/java/jdk1.7.0_67
+
+[root@localhost tomcat]# java -version
+java version "1.7.0_67"
+Java(TM) SE Runtime Environment (build 1.7.0_67-b01)
+Java HotSpot(TM) 64-Bit Server VM (build 24.65-b04, mixed mode)
+[root@localhost tomcat]# 
+
+2）安装Tomcat
+
+[root@localhost tomcat]# tar zxf apache-tomcat-7.0.67.tar.gz -C /usr/local/
+[root@localhost tomcat]# ln -s /usr/local/apache-tomcat-7.0.67/ /usr/local/tomcat
+
+[root@localhost tomcat]# vim /etc/profile
+export CATALINA_HOME=/usr/local/tomcat
+
+[root@localhost tomcat]# source /etc/profile
+[root@localhost tomcat]# env | grep HOME
+CATALINA_HOME=/usr/local/tomcat
+JAVA_HOME=/usr/java/jdk1.7.0_67
+HOME=/root
+
+
+
+2、 创建多实例目录 
+
+[root@localhost tomcat]# mkdir -pv /usr/local/tomcat/multi-instance/instance{1,2}/{conf,logs}
+[root@localhost tomcat]# cd /usr/local/tomcat/multi-instance/
+[root@localhost multi-instance]# ls
+instance1  instance2
+
+将Tomcat安装目录下的conf目录所有配置文件拷贝到对应实例目录 
+
+[root@localhost ~]# cd /usr/local/tomcat/conf/
+[root@localhost conf]# cp /usr/local/tomcat/conf/* /usr/local/tomcat/multi-instance/instance1/conf/
+[root@localhost conf]# cp /usr/local/tomcat/conf/* /usr/local/tomcat/multi-instance/instance2/conf/
+
+
+3、配置每个实例所占用的端口 
+
+[root@localhost conf]# vim /usr/local/tomcat/multi-instance/instance1/conf/server.xml 
+
+<Server port="8091" shutdown="SHUTDOWN">
+<Connector port="8081" protocol="HTTP/1.1"
+    connectionTimeout="20000"
+    redirectPort="8443" />
+
+<Host name="localhost"  appBase="/webapps"
+    unpackWARs="true" autoDeploy="true">
+
+[root@localhost conf]# vim /usr/local/tomcat/multi-instance/instance2/conf/server.xml 
+
+<Server port="8092" shutdown="SHUTDOWN">
+<Connector port="8082" protocol="HTTP/1.1"
+    connectionTimeout="20000"
+    redirectPort="8443" />
+
+<Host name="localhost"  appBase="/webapps"
+    unpackWARs="true" autoDeploy="true">
+
+
+4、分别在对应实例目录下编写启动脚本 
+
+[root@localhost ~]# vim /usr/local/tomcat/multi-instance/instance1/ins1.sh 
+
+#!/bin/bash
+#instace1 script
+
+. /etc/init.d/functions
+
+export JAVA_OPTS='-Xms64m -Xmx128m'
+export CATALINA_HOME=/usr/local/tomcat
+export CATALINA_BASE=/usr/local/tomcat/multi-instance/instance1
+
+
+case $1 in
+start)
+  $CATALINA_HOME/bin/startup.sh
+  ;;
+stop)
+  $CATALINA_HOME/bin/shutdown.sh
+  ;;
+restart)
+  $CATALINA_HOME/bin/shutdown.sh
+  sleep 5
+  $CATALINA_HOME/bin/startup.sh
+  ;;
+esac
+
+
+[root@localhost ~]# vim /usr/local/tomcat/multi-instance/instance2/ins2.sh 
+
+#!/bin/bash
+#instace2 script
+
+. /etc/init.d/functions
+
+export JAVA_OPTS='-Xms64m -Xmx128m'
+export CATALINA_HOME=/usr/local/tomcat
+export CATALINA_BASE=/usr/local/tomcat/multi-instance/instance2
+
+
+case $1 in
+start)
+  $CATALINA_HOME/bin/startup.sh
+  ;;
+stop)
+  $CATALINA_HOME/bin/shutdown.sh
+  ;;
+restart)
+  $CATALINA_HOME/bin/shutdown.sh
+  sleep 5
+  $CATALINA_HOME/bin/startup.sh
+  ;;
+esac
+
+
+5、分别启动两个实例  
+
+[root@localhost instance2]# /usr/local/tomcat/multi-instance/instance1/ins1.sh start
+[root@localhost instance2]# /usr/local/tomcat/multi-instance/instance2/ins2.sh start
+[root@localhost conf]# netstat -antp | grep java
+tcp        0      0 :::8081                     :::*                        LISTEN      3151/java           
+tcp        0      0 :::8082                     :::*                        LISTEN      3235/java           
+tcp        0      0 ::ffff:127.0.0.1:8091       :::*                        LISTEN      3151/java           
+tcp        0      0 :::8009                     :::*                        LISTEN      3151/java    
+
+6、创建网站目录，并测试 
+
+[root@localhost instance2]# mkdir -pv /webapps/ROOT 
+
+通过http://192.168.87.101:8081/，http://192.168.87.101:8082/访问可看到相同的内容，表明成功.
+
+
+
+
+
+Nginx+Tomcat多实例实现负载均衡 
+
+方案1： 客户端所有请求全部代理到后端Tomcat服务器 
+
+upstream tomcatsrv {
+    server 192.168.87.101:8081 weight=1 max_fails=2 fail_timeout=2;
+    server 192.168.87.101:8082 weight=1 max_fails=2 fail_timeout=2;
+}
+
+location / {
+ proxy_pass http://tomcatsrv;
+ proxy_set_header x-real-ip $remote_addr;
+}
+
+
+  
+方案2：客户端对jsp页面访问请求代理到后端Tomcat服务器
+
+upstream tomcatsrv{
+    server 192.168.87.101:8081 weight=1 max_fails=2 fail_timeout=2;
+    server 192.168.87.101:8082 weight=1 max_fails=2 fail_timeout=2;
+}
+
+server {
+	....
+	location / {
+		root html;
+		index index.html;
+	}
+
+	location ~* \.jsp$ {
+		proxy_pass http://tomcatsrv;
+		proxy_set_header x-real-ip $remote_addr;
+	}
+}
+
+
+为保证后端Tomcat服务器可以记录客户端真实IP，需要修改Tomcat主配置文件中的日志格式：
+
+[root@tomcat ROOT]# vim /usr/local/tomcat/multi-instance/instance1/conf/server.xml 
+<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+     prefix="localhost_access_log." suffix=".txt"
+     pattern="%{x-real-ip}i %l %u %t &quot;%r&quot; %s %b" />
+
+  
+  

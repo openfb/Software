@@ -1,0 +1,49 @@
+   67  rpm -ivh jdk-8u20-linux-x64.rpm 安装jdk环境
+   68  sh jdk.sh 配置环境变量
+   70  java -version  查看Java版本号
+   71  tar -xzvf apache-tomcat-7.0.47.tar.gz -C /mnt/ 解压缩tomcat源码包
+
+   75  cp -r /mnt/apache-tomcat-7.0.47/ /opt/tomcat 指定一个安装目录
+   76  cd /opt/tomcat/bin/
+   77  ./startup.sh 启动tomcat服务
+   78  lsof -i:8080 查看是否成功开启
+   79  service iptables stop 关闭防火墙
+   80  setenforce 0 关闭selinux
+   81  ifup eth0 重启网卡
+现在可以测试tomcat是否成功安装了（访问：http://ip:8080）
+
+安装提供 通过uri路径来区分客户端访问页面类型的模块(mod_jk模块也叫连接器)
+   82  cd /root/Desktop
+   83  tar -xzvf jakarta-tomcat-connectors-jk2-2.0.4-src.tar.gz 
+  
+   85  cd jakarta-tomcat-connectors-jk2-2.0.4-src/jk/native2/
+   86  which apxs  查看是否安装apxs程序（apxs模块由系统安装光盘中的httpd-devel-2.2.3-6.el5.i386.rpm包提供
+
+   87  yum -y install apr-devel apr-util-devel httpd-devel httpd
+   88  service httpd restart
+   89  yum -y install make cmake gcc gcc-c++-* libtool ncurses-devel 安装编译工具
+   89  ./configure --with-apxs2=/usr/sbin/apxs
+   90  make
+   95  make install-apxs
+
+   97  ls /etc/httpd/modules/mod_jk2.so
+   98  vim /etc/httpd/conf/httpd.conf 
+在DirectoryIndex参数那添加index.jsp
+在配置文件最后一行添加LoadModule jk2_module modules/mod_jk2.so 
+
+  99  service httpd restart
+  100  cd /root/Desktop/jakarta-tomcat-connectors-jk2-2.0.4-src
+  101  cd jk/conf/
+  102  ls
+  103  cp workers2.properties /etc/httpd/conf
+  104  vim /etc/httpd/conf/workers2.properties 
+     将[uri:/examples/*.jsp]     修改为[uri:/*.jsp]
+
+  105  service httpd restart
+  106  vim /var/www/html/index.html
+  107  cd /opt/tomcat/webapps/ROOT/
+  108  ls
+  110  rm -rf *
+  111  ls
+  112  vim index.jsp
+

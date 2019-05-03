@@ -1,0 +1,733 @@
+tomcat:
+	PHP:
+		开发语言,脚本语言
+		运行环境：解释执行
+			Zend Engine：OPcode
+				XCache,APC,eAccelerator
+			MVC:
+				data：数据
+				bussiness：业务
+				presention：展示
+
+C/C++：严重依赖于CPU架构、及OS
+	移植困难
+	维护成本高
+	速度快，适用于开发底层应用，系统、驱动
+
+C：
+	面向过程
+C++：
+	面向对象
+	
+
+C：API(Application Programming Interface)
+	OS,System call
+		API
+
+ABI: Application Binary Interface
+
+
+java：
+	在不同的硬件平台上，运行同一种语言开发的程序
+
+bytecode：字节码,由java虚拟机(JVM)解释运行
+
+包含四个独立却又彼此相关的技术：
+	Java程序开发语言
+	Java API 
+	Java Class文件格式,定义bytecode应该遵循哪种规范
+	JVM：Java Virtual Machine
+	
+JVM的实现方式：
+	1、一次性解释器，解释字节码并执行
+	2、即时解释器(just in-time compiler)
+		依赖于更多内存缓存解释后的结果
+	3、自适应编译器
+		缓存20%左右的代码，提高80%的速度
+		
+Java设计语言：Sun 
+Java API: 
+
+JVM: Hotspot JVM 
+	JRE: Java运行时环境
+		运行 
+	JDK：Java开发环境 
+		开发(编译)+运行 
+JVM: Open JDK 
+	开发+运行 
+	
+JAVA API类库
+第三方类库
+
+JDK=JAVA+API+JVM,用于实现Java程序开发的最小环境 
+JRE=JVM+java SE API
+
+
+Java应用领域的不同，Java可分为三类：
+	JAVA SE：Standard Edtion 
+	JAVA EE: Enterprise Edtion 
+	JAVA ME: Mobile Edtion 
+	
+1995年，JAVA 1.0面世, James Gosling,Green Project 
+
+
+applet：小程序，基于web技术开发运行在客户端的程序
+	动态网站：
+	
+CGI：Common Gateway Interface 
+	CGI: 协议 
+		当用户请求动态内容时，由CGI调用某个应用程序执行并将结果返回给web服务器，再由web服务器响应客户端 
+
+Servlet：基于CGI开发运行在服务器端的程序 加入对http的处理,但不能在HTML直接嵌入JAVA 
+JSP：Java Server Page 
+	<%language="java"> 
+	SSH：Structs,Spring,Hebernate 
+	
+JSP--->Servlet 
+	Jasper,将JSP转换为Servlet,再由java编译成类执行
+	.jsp----->.java----->.class 
+	
+JDK: javac工具, .java------->.class 
+
+
+Servlet Container： Servlet容器 
+Web Container：Web容器 
+
+
+
+JVM运行时内存区域：
+
+线程私有内存区域：
+	程序计数器：记录java程序运行到哪个指令的位置  
+	Java虚拟机栈：保存程序运行时的私有变量的值等
+	
+线程共享内存区域：
+	方法区：对象拥有的方法的集合
+	堆：所有对象的集合；java自动内存回收，GC(Garbage Collector)
+	
+垃圾回收算法：
+	1、标记---清除
+	2、复制(可避免碎片,浪费空间)
+	3、标记---整理
+垃圾回收器：
+	Serial 
+	ParNew
+	Parellel Scavenge  降低垃圾回收所占用的时间比例 
+	Serial Old	
+	Parellel Old 
+	
+	CMS: Concurrent Mark Sweep 
+		特点：并发收集,低停顿
+		缺点：无法收集浮动垃圾(线程正在运行时产生的对象)
+			  由于基于标记--清除算法，可能会产生碎片
+			  
+	G1：Garbage First 
+		特点：不会产生碎片, 精确控制停顿时间 
+		
+		
+Sun:
+	JRE
+	JDK 
+Open:
+	OpenJDK(bug多多)
+	
+	
+JDK 1.6
+	update n
+JDK 1.7
+	update n 
+	
+jdk-1.6.32 
+	
+	
+	
+JDK安装： 
+	rpm
+	通用二进制格式   .bin
+	源码  
+			  
+安装jdk-6u20-linux-i586.bin
+# mkdir /usr/java 
+# cd /usr/java 
+# chmod a+x jdk-6u20-linux-i586.bin 
+# ./jdk-6u20-linux-i586.bin 
+
+# vim /etc/profile 
+export JAVA_HOME=jdk1.6.0_20			  
+export PATH=$PATH:$JAVA_HOME/bin 
+# source /etc/profile 
+
+通过以下命令查看jdk版本相关信息，表明安装成功
+# java -version
+java version "1.6.0_20"
+Java(TM) SE Runtime Environment (build 1.6.0_20-b02)
+Java HotSpot(TM) Client VM (build 16.3-b01, mixed mode, sharing)
+			  
+			  
+java配置参数：
+	-XX:+<option>：开启此参数指定的功能
+	-XX:-<option>：关闭功能
+	-XX:<option>=<value>：给option指定的参数赋值
+	
+java -XX:+PrintFlagsFinal   显示所有java的参数
+
+
+Sun JDK监控和故障处理工具：
+	jps，JVM Process Status Tool：显示指定系统内所有的Hotspot虚拟机进程的列表信息
+	jstat，JVM Statistics Monitors Tool：收集并显示HostSpot虚拟机各方面的运行数据 
+	jinfo，显示正在运行的某Hotspot虚拟机配置信息 
+	jmap，生成某Hotspot虚拟机的内存转储快照 
+	
+可视化工具：
+	jconsole：Java的监控与管理控制台
+	 jvisualvm：
+
+
+JAVA EE API:
+	Servlet
+	JSP 
+
+JAVA SE API:
+	JNDI：用于与LDAP服务器交互的API
+	JAXP：用于分析及转换XML 
+	
+JAVA EE Applications:
+	Websphere
+	Weblogical 
+	oc4j
+	JBoss
+	JOnAS
+	Geronimo
+	Glassfish 
+	
+
+Tomcat体系结构
+Tomcat Server:每一个tomcat进程，实例 
+Tomcat Service：将一个或者多个connector(负责接收http请求的连接器，接收https的连接器)关联到某个引擎 
+Tomcat Engine：类似于一个servlet container(具有JVM的java虚拟机)
+Tomcat Host 
+	Context 
+	
+容器类组件：
+	Engine,Host,Context 
+顶级组件：
+	Server,Service 
+	
+Realm(领域): 用户帐号数据库
+Valve(阀门)：
+	记录访问日志(过滤哪些日志应该记录)
+	基于IP认证
+Logger：日志记录器
+	记录日志
+
+
+Tomcat安装
+# tar zxf apache-tomcat-7.0.23.tar.gz -C /usr/local/
+# ln -s /usr/local/apache-tomcat-7.0.23/ /usr/local/tomcat
+
+# vim /etc/profile.d/tomcat.sh
+export CATALINA_HOME=/usr/local/tomcat
+export PATH=$PATH:$CATALINA_HOME/bin	
+# source /etc/profile.d/tomcat.sh
+
+启动tomcat 
+# catalina.sh start
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/temp
+Using JRE_HOME:        /usr/java/jdk1.6.0_20
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+
+# netstat -tnlp | grep java
+tcp        0      0 ::ffff:127.0.0.1:8005       :::*                        LISTEN      29814/java          
+tcp        0      0 :::8009                     :::*                        LISTEN      29814/java          
+tcp        0      0 :::8080                     :::*                        LISTEN      29814/java          
+
+在客户端浏览器输入http://10.1.1.1:8080可以看到tomcat默认首页，表明tomcat启动成功 
+
+Tomcat启动脚本：
+# cat /etc/rc.d/init.d/tomcat 
+#!/bin/bash
+# 
+# chkconfig: 2345 96 14
+#
+
+JAVA_HOME=/usr/java/jdk1.6.0_20
+CATALINA_HOME=/usr/local/tomcat
+export JAVA_HOME CATALINA_HOME
+exec $CATALINA_HOME/bin/catalina.sh $*
+
+# chmod a+x /etc/init.d/tomcat 
+# chkconfig --add tomcat 
+# chkconfig --list tomcat
+tomcat         	0:关闭	1:关闭	2:启用	3:启用	4:启用	5:启用	6:关闭
+	
+Tomcat核心配置文件 ：server.xml
+
+<Server>
+  <Service>
+	<Connector />
+	<Engine>
+		<Host>
+			<Context>  </Context>
+		</Host>
+	</Engine>
+  </Service>
+</Server>
+
+web.xml 
+默认的，应用程序部署描述符
+部署：将一个web应用程序所依赖的类装载进JVM 
+
+catalina.policy：
+定义tomcat自身安全的策略
+
+多实例tocmat
+	在同一个物理主机上，配置两个监听在不同套接字的tomcat进程 
+	
+	
+
+
+Apache反向代理模块
+	mod_proxy
+		支持http协议
+		支持ajp协议，二进制格式，效率高
+	mod_jk
+	mod_jk2 
+	
+	
+
+	
+配置基于mod_proxy实现向tomcat反向代理 
+环境描述： rhel 6.3 
+	server1.bj.com 10.1.1.1 Apache 
+	server2.bj.com 10.1.1.2 Tomcat 
+	server3.bj.com 10.1.1.3 Tomcat 
+	
+	
+在server2.bj.com上安装tomcat 
+
+安装jdk 
+# chmod +x jdk-6u20-linux-i586.bin 
+# ./jdk-6u20-linux-i586.bin 
+# vim /etc/profile.d/java.sh
+export JAVA_HOME=/usr/java/jdk1.6.0_20/
+export PATH=$PATH:$JAVA_HOME/bin
+# source /etc/profile.d/java.sh
+
+# java -version
+java version "1.6.0_20"
+Java(TM) SE Runtime Environment (build 1.6.0_20-b02)
+Java HotSpot(TM) Client VM (build 16.3-b01, mixed mode, sharing)
+
+安装Tomcat 
+# tar zxf apache-tomcat-7.0.23.tar.gz -C /usr/local/
+# ln -s /usr/local/apache-tomcat-7.0.23/ /usr/local/tomcat
+# cat /etc/profile.d/tomcat.sh 
+export CATALINA_HOME=/usr/local/tomcat
+export PATH=$PATH:$CATALINA_HOME/bin
+# source /etc/profile.d/tomcat.sh	
+	
+
+
+编辑tomat配置文件server.xml,配置一台新的虚拟主机
+# vim /usr/local/tomcat/conf/server.xml 
+ <Host name="www.bj.com"  appBase="/web"
+       unpackWARs="true" autoDeploy="true">
+   <Context path="" docBase="webapps" reLoadable="true" />
+ </Host>
+	
+指定默认的虚拟主机
+<Engine name="Catalina" defaultHost="www.bj.com" jvmRoute="TomcatA">	
+	
+建立测试首页index.jsp 
+# mkdir -p /web/webapps
+# cat /web/webapps/index.jsp
+
+<%@ page language="java" %>
+<html>
+  <head><title>TomcatA</title></head>
+  <body>
+    <h1><font color="red">TomcatA</font></h1>
+    <table align="centre" border="1">
+	<tr>
+	   <td>Session ID</td>
+    <% session.setAttribute("abc","abc");%>
+           <td><%= session.getId() %></td>
+         </tr>
+ 	 <tr>
+	   <td>Create on</td>
+           <td><%= session.getCreationTime() %></td>
+         </tr>
+     </table>
+   </body>
+</html>	
+	
+启动tomcat，并测试访问 
+# catalina.sh start
+Using CATALINA_BASE:   /usr/local/tomcat
+Using CATALINA_HOME:   /usr/local/tomcat
+Using CATALINA_TMPDIR: /usr/local/tomcat/temp
+Using JRE_HOME:        /usr/java/jdk1.6.0_20/
+Using CLASSPATH:       /usr/local/tomcat/bin/bootstrap.jar:/usr/local/tomcat/bin/tomcat-juli.jar
+
+# netstat -tnlp | grep java
+tcp        0      0 :::8009                     :::*                        LISTEN      3095/java           
+tcp        0      0 :::8080                     :::*                        LISTEN      3095/java  	
+		
+	
+在server1.bj.com上安装httpd-2.4.12 
+# tar zxf apr-1.5.2.tar.gz 
+# cd apr-1.5.2
+# ./configure --prefix=/usr/local/apr	
+# make && make install 
+
+
+# tar zxf apr-util-1.5.4.tar.gz 
+# cd apr-util-1.5.4
+# ./configure --prefix=/usr/local/apr-util --with-apr=/usr/local/apr/
+# make && make install 
+
+
+# tar zxf httpd-2.4.12.tar.gz 
+# cd httpd-2.4.12
+# ./configure --prefix=/usr/local/apache --sysconfdir=/etc/httpd --enable-so --enable-ssl --enable-cgi --enable-rewrite --with-zlib --with-pcre --with-apr=/usr/local/apr --with-apr-util=/usr/local/apr-util --enable-mpms-shared=all --with-mpm=event --enable-proxy --enable-proxy-http --enable-proxy-ajp --enable-proxy-balancer --enable-lbmethod-heartbeat --enable-heartbeat --enable-slotmem-shm --enable-slotmem-plain --enable-watchdog
+# make && make install 
+
+编辑httpd.conf配置文件，指定pid文件，并加载shm模块 
+# cp /etc/httpd/httpd.conf /etc/httpd/httpd.conf.bak 
+# vim /etc/httpd/httpd.conf 
+ServerName www.bj.com 
+PidFile /var/run/httpd.pid 
+
+LoadModule socache_shmcb_module modules/mod_socache_shmcb.so
+LoadModule slotmem_shm_module modules/mod_slotmem_shm.so
+
+Include /etc/httpd/extra/httpd-vhosts.conf
+	
+启动apache，并保证apache可正常工作
+# /usr/local/apache/bin/apachectl start 
+# netstat -tnlp | grep :80
+tcp        0      0 :::80                       :::*                        LISTEN      14509/httpd         	
+	
+	
+配置apache基于mod_proxy模块与tomcat结合 
+# vim /etc/httpd/extra/httpd-vhosts.conf 
+<VirtualHost *:80>
+ ProxyVia On
+ ProxyRequests Off
+ ProxyPass / http://10.1.1.2:8080/
+ ProxyPassReverse / http://10.1.1.2:8080/
+ <Proxy *>
+  Require all granted
+ </Proxy>
+ <Location / > 
+  Require all granted 
+ </Location>
+</VirtualHost>
+
+# /usr/local/apache/bin/apachectl restart 
+通过客户端浏览器访问http://10.1.1.1，可以查看到后端tomcat页面，表明代理成功 
+
+	
+配置apache与后端tomcat结合 
+
+在httpd.conf全局配置段或者虚拟机中添加如下内容：
+ProxyVia Off
+ProxyRequests Off
+ProxyPreserveHost Off
+<Proxy *>
+  Require all granted
+</Proxy>
+<Location / > 
+  Require all granted 
+</Location>
+ProxyPass / ajp://10.1.1.2:8009/ 
+ProxyPassReverse / ajp://10.1.1.2:8009/
+
+或让apache跟tomcat连接器进行结合
+ProxyVia Off
+ProxyRequests Off
+ProxyPass / http://10.1.1.2:8080/
+ProxyPassReverse / http://10.1.1.2:8080/
+<Proxy *>
+  Require all granted
+</Proxy>
+<Location / > 
+  Require all granted 
+</Location>
+
+
+关于如上指令说明：
+
+ProxyPreserveHost { On | Off }: 如果启用此功能，代理会将用户请求报文中的Host:行发送给后端服务器，而不再使用ProxyPass指定的服务器地址。如果想在反向代理中支持虚拟主机，则需要开启此选项，否则就无需打开此选项
+
+ProxyVia { On | Off | Full | Block }:用于控制在http首部是否使用via:，主要用于在多级代理中控制代理请求的流向，默认为off，即不启用此功能：On表示每个请求和响应报文均添加via:，Full表示每个via:行都会添加当前apache服务器的版本号信息；block表示每个代理请求报文中的via都会被移除 
+
+ProxyRequests { On | Off }：是否开户apache正向代理的功能；启用此项时为了代理http协议必须启用mod_proxy_http模块，同时，如果为apache设置了ProxyPass,则必须将ProxyRequests设置为off
+
+ProxyPass [path] !|url [key=value key=value ...]:
+将后端服务器某URl与当前服务器的某虚拟路径关联起来作为提供服务的路径，path为当前服务器上的某虚拟路径，url为后端服务器上某url路径，使用此指令时必须将proxyRequests的值设置为off。需要注意的是，如果path以"/"结尾，则对应的url也必须以"/"结尾，反之亦然。
+另外,mod_proxy模块在httpd 2.1的版本之后支持与后端服务器的连接池功能，连接在按需创建在可以保存至连接池中以备进一步使用。连接池大小或其它设定可以通过ProxyPass中使用key=value的方式定义，常用的key值如下所示：
+min:连接池的最小容量，此值与实际连接个数无关，仅表示连接池最小要初始化的空间大小 
+max：连接池的最大容量，每个MPM都有自己独立的容量；都值与MPM本身有关，如prefork的总是为1，而其它的则取决于ThreadsPerChild指令的值
+loadfactor：用于负载均衡集群配置中，定义对应后端服务器的权重，取值范围为1--100 
+retry：当apache将请求发送至后端服务器得到错误响应时等待多长时间以后再重试。单位是秒钟
+
+
+如果Proxy指定是以balancer://开头，即用于负载均衡集群时，其还可以接受一些特殊的参数，如下所示：
+lbmethod：apache实现负载均衡的调度方法，默认为byrequests，即基于权重将统计请求个数进行调度，bytraffic则执行基于权限的流量计数调度，bybusyness通过考量每个后端服务器的当前负载进行调度
+maxattempts：放弃请求之前实现故障转移的次数,默认为1,其最大值不应该大于总的节点数。
+nofailover：取值为on或者off，设置为on时表示后端服务器故障时，用户的session将损坏；因此，在后端服务器不支持sessions复制时可将其设置on 
+stickysession：调度器的sticky session的名字,根据web程序语言的不同，其值为JESSIONID或者PHPSESSIONID 
+上述指令除了在banlancer://或者ProxyPass中设定之外，也可以使用proxyset指令直接进行设置，如：
+
+<Proxy balancer://hotcluster>
+BalancerMember http://www1.bj.com:8080 loadfactor=1 
+BalancerMember http://www2.bj.com:8080 loadfactor=2 
+ProxySet lbmethod=bytraffic
+</Proxy>
+
+ProxyPassReverse:用于让apache调整HTTP重定向响应报文中的location,Content-Location及URI标签所对应的URL，在反向代理环境中必须使用此指令避免重定向报文绕过proxy服务器
+
+
+
+
+
+
+
+
+配置apache通过mod_jk模块与Tomcat连接
+
+mod_jk是ASF的一个项目，是一个工作于apache端基于AJP协议与Tomcat通信的连接器，它是apache的一个模块，是AJP协议的客户端(服务端是Tomcat的AJP连接器)
+
+在Apache端安装tomcat-connector,将其编译安装为apache的一个功能模块
+# tar zxf tomcat-connectors-1.2.41-src.tar.gz 
+# cd tomcat-connectors-1.2.41-src/native/
+# ./configure --with-apxs=/usr/local/apache/bin/apxs 
+# make && make install 
+在apache安装目录下的modules目录中，可以查看到mod_jk模块表示安装成功
+
+
+Apache要使用mod_jk连接器，需要在启动时加载此连接器模块。为了方便管理与mod_jk模块相关的配置，这里使用一个专门的配置文件/etc/httpd/extra/httpd-jk.conf来保存相关指令及其配置。其内容如下：
+LoadModule jk_module modules/mod_jk.so 
+JkWorkersFile /etc/httpd/extra/workers.properties
+JkLogFile logs/mod_jk.log 
+JkLogLevel debug
+JkMount /* TomcatA
+JkMount /status/ stat1 
+
+除了需要使用LoadModule指令在apache中装载模块外，mod_jk还需要在apache主配置文件中设置其它一些指令来配置其工作属性。如JkworkersFile则用于指定保存了worker相关工作属性定义的配置文件，JkLogFile则用于指定mod_jk模块的日志文件,JkLogLevel则可用于指定日志级别(info,error,debug)，此外还可以使用JkRequestLogFormat自定义日志信息格式，而JkMount(格式：JkMount <URL to match> <Tomat worker name>)指定则用于控制URL与Tomcat workers的对应关系。
+
+为了让apache能使用/etc/httpd/extra/httpd-jk.conf配置文件中的配置信息，需要编辑/etc/httpd/httpd.conf配置文件，添加如下一行：
+Include /etc/httpd/extra/httpd-jk.conf 
+
+对于apache代理来说，每一个后端的Tomcat实例中的engine都可以视作为一个worker，而每一个worker的地址、连接器的端口等信息都需要在apache端指定以便apache可以识别并使用这些worker
+
+约定俗成，配置这些信息的文件通常为workers.properties,其具体路径则是使用前面介绍过的JkWorkerFile指定的，在apache启动时，mod_jk会扫描此文件获取每一个worker的配置信息。比如，这里使用/etc/httpd/extra/workers.properties
+
+worker.properties文件一般由两类指令组成：一个是mod_jk可以连接的各worker名称列表，二是每一个worker的属性配置信息。它们分别遵循如下使用语法。
+
+worker.list = <a comma separated list of worker names > 
+worker.<worker name>.<property> = <property value> 
+
+其中worker.list指令可以重复指定多次，而worker name则是Tomcat中engine组件jvmRoute参数的值，如：
+worker.TomcatA.host=10.1.1.2 
+
+根据其工作机制的不同，worker有多种不同的类型，这是需要为每个worker定义的一项属性worker.<worker name>.type。常见的类型如下：
+ajp13：此类型表示当前worker为一个运行着的tomcat实例。
+lb: lb即load balance，专用于负载均衡场景中的woker；此worker并不真正负责处理用户请求，而是将用户请求调度给其它类型为ajp13的worker
+status：用户显示分布式环境中各实际worker工作状态的特殊worker，它不处理任何请求，也不关联到任何实际工作的worker实际
+
+worker其它常见的属性说明 ：
+	host：tomcat 7的worker实例所在的主机
+	port：tomcat 7实例上AJP1.3连接器的端口
+	connection_pool_minsize：最少要保存在连接池中的连接个数；默认为pool_size/2 
+	connection_pool_timeout：连接池中连接的超时时长
+	mount：由当前worker提供的context路径，如果有多个则使用空格格开；此属性可以由JkMount指令替代
+	retries：错误发生时的重试次数
+	socket_timeout：mod_jk等待woker响应的时长，默认为0，无限等待
+	socket_keepalive：是否启用keep alive功能，1表示启用，0表示不启用
+	lbfactor：worker的权重，可以在负载均衡的应用场景中为worker定义此属性
+	
+另外，在负载均衡模式中，专用的属性还有：
+	balance_workers：用于负载均衡模式中各worker的名称列表，需要注意的是，出现在此处的worker名称一定不能在任何worker.list属性列表中定义过，并且worker.list属性定义的worker名称必须包含负载均衡worker	method：可以设定为R、T或者B；默认为R，即根据请求的个数进行调度，T表示根据已经发送给worker的实际流量大小进行调度；B表示根据实际负载情况进行调度。
+	sticky_session：在将某请求调度至某worker后，源于此地址的所有后续请求都将直接调度至此worker，实现将用户session与某worker绑定。默认为1，即启用此功能，如果后端的各worker之间支持session复制，则可以将此属性值设置为0 
+	
+根据前文中的说明，这是使用/etc/httpd/extra/workers.properties来定义一个名称为TomcatA的worker，并为其指定属性。
+worker.list=TomcatA,stat1
+worker.TomcatA.host=10.1.1.2
+worker.TomcatA.port=8009
+worker.TomcatA.type=ajp13
+worker.TomcatA.lbfactor=1
+worker.stat1.type=status
+
+至此，一个基于mod_jk模块与后端名为TomcatA的worker通信的配置已经完成，重启httpd服务即可生效。
+
+
+
+
+配置基于mod_jk实现负载均衡
+
+# vim /etc/httpd/extra/httpd-jk.conf 
+LoadModule jk_module modules/mod_jk.so
+JkWorkersFile /etc/httpd/extra/workers.properties
+JkLogFile logs/mod_jk.log
+JkLogLevel debug
+JkMount /* controller		//将请求转换至负载均衡器controller上，controller在后面work.properties文件中定义 
+JkMount /status/ stat1
+
+# cat /etc/httpd/extra/workers.properties 
+worker.list=controller,stat1
+
+worker.TomcatA.host=10.1.1.2
+worker.TomcatA.port=8009
+worker.TomcatA.type=ajp13
+worker.TomcatA.lbfactor=1
+
+
+worker.TomcatB.host=10.1.1.3
+worker.TomcatB.port=8009
+worker.TomcatB.type=ajp13
+worker.TomcatB.lbfactor=1
+
+worker.controller.type=lb        
+worker.retries=3
+worker.controller.balance_workers=TomcatA,TomcatB
+worker.controller.sticky_session=1
+worker.stat1.type=status
+
+
+重启httpd服务即可生效
+
+
+
+
+基于mod_proxy实现负载均衡
+# vim /etc/httpd/extra/httpd-vhosts.conf 
+ProxyRequests Off
+
+<proxy balancer://lbcluster1>
+  BalancerMember ajp://10.1.1.2:8009 loadfactor=1 route=TomcatA
+  BalancerMember ajp://10.1.1.3:8009 loadfactor=1 route=TomcatB
+  ProxySet lbmethod=byrequests
+</proxy>
+
+<VirtualHost *:80>
+ ProxyVia On
+ ProxyPass / balancer://lbcluster1/ stickysession=jsessionid
+ ProxyPassReverse / balancer://lbcluster1/
+ <Proxy *>
+  Require all granted
+ </Proxy>
+ <Location / > 
+  Require all granted 
+ </Location>
+</VirtualHost>
+
+
+在mod_proxy中输出状态信息
+# vim /etc/httpd/extra/httpd-vhosts.conf 
+添加如下内容：
+ <Location /balancer-manager>
+   SetHandler balancer-manager
+   Require all granted
+   ProxyPass !
+  </Location>
+  
+完整文件如下：
+# cat httpd-vhosts.conf 
+ProxyRequests Off
+<proxy balancer://lbcluster1>
+  BalancerMember ajp://10.1.1.2:8009 loadfactor=1 route=TomcatA
+  BalancerMember ajp://10.1.1.3:8009 loadfactor=1 route=TomcatB
+  ProxySet lbmethod=byrequests
+</proxy>
+
+<VirtualHost *:80>
+ ProxyVia On
+ ProxyPass / balancer://lbcluster1/ stickysession=jsessionid
+ ProxyPassReverse / balancer://lbcluster1/
+ <Proxy *>
+  Require all granted
+ </Proxy>
+ <Location / > 
+  Require all granted 
+ </Location>
+ <Location /balancer-manager>
+   SetHandler balancer-manager
+   Require all granted
+   ProxyPass !               //访问balancer-manager时不作反向代理 
+  </Location>
+</VirtualHost>
+
+  
+通过http://10.1.1.1/balancer-manager可访问状态信息
+
+访问mod_jk状态信息，可直接通过在httpd-jk.conf配置的路径访问(http://10.1.1.1/status/)
+
+
+
+
+
+
+
+配置Tomcat集群，实现会话共享
+
+1、编辑server.xml文件，在该文件中添加如下内容：
+<Cluster className="org.apache.catalina.ha.tcp.SimpleTcpCluster" channelSendOptions="8">
+<Manager className="org.apache.catalina.ha.session.DeltaManager" expireSessionsOnShutdown="false" notifyListenersOnReplication="true" />
+<Channel className="org.apache.catalina.tribes.group.GroupChannel">
+<Membership className="org.apache.catalina.tribes.membership.McastService" address="229.1.1.1" bind="10.1.1.2" port="45564" frequency="500" dropTime="3000" />
+<Receiver className="org.apache.catalina.tribes.transport.nio.NioReceiver" address="10.1.1.2" port="4000" autoBind="100" selectorTimeout="5000" maxThreads="6" />
+<Sender className="org.apache.catalina.tribes.transport.ReplicationTransmitter">
+<Transport className="org.apache.catalina.tribes.transport.nio.PooledParallelSender" />
+</Sender>
+<Interceptor className="org.apache.catalina.tribes.group.interceptors.TcpFailureDetector" />
+<Interceptor className="org.apache.catalina.tribes.group.interceptors.MessageDispatch15Interceptor" />
+</Channel>	
+<Valve className="org.apache.catalina.ha.tcp.ReplicationValve" filter=".*\.gif;.*\.js;.*\.jpg;.*\.htm;.*\.html;.*\.txt;" />
+<Valve className="org.apache.catalina.ha.session.JvmRouteBinderValve" />
+<Deloyer className="org.apache.catalina.ha.deloy.FarmWarDeployer" tempDir="/tmp/war-temp/" deployDir="/tmp/war-deploy/" watchDir="/tmp/war-listen/" watchEnabled="false" />
+<ClusterListener className="org.apache.catalina.ha.session.JvmRouteSessionIDBinderListener" />
+<ClusterListener className="org.apache.catalina.ha.session.ClusterSessionListener" />
+</Cluster>
+
+以上内容定义在Engine容器中，则表示对所有主机均启用集群功能，如果定义在某Host中，则表示仅对此主机启用集群功能 
+
+
+2、所有启用集群的web应用程序，其web.xml中都必须添加<distributable />才能实现集群功能。如果web应用程序没有自己的web.xml，也可以通过复制默认的web.xml至其WEB-INF目录中实现
+
+
+在10.1.1.2及10.1.1.3上配置Tomcat集群 
+
+10.1.1.2操作：
+
+在web应用程序目录下创建WEB-INF目录，并复制web.xml文件 
+# mkdir /web/webapps/WEB-INF
+# cp /usr/local/tomcat/conf/web.xml /web/webapps/WEB-INF
+
+编辑/web/webapps/WEB-INF/web.xml文件，添加如下内容：
+# vim /web/webapps/WEB-INF/web.xml
+<distributable />
+
+# scp -r /web/webapps/WEB-INF/ 10.1.1.3:/web/webapps/
+root@10.1.1.3's password: 
+web.xml                                                                                             100%  146KB 146.4KB/s   00:00    
+
+
+编辑server.xml，添加<Cluster>段配置：
+
+
+
+
+
+
+
+
+
+
+
+
+
+
